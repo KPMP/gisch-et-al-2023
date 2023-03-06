@@ -143,8 +143,8 @@ const hgOptions = {
 };
 
 const initialXDomain = [
-	1444728415,
-	1464906496
+	0,
+	300000000
 ];
 
 function WidgetNavigation(props) {
@@ -307,6 +307,16 @@ function WidgetNavigation(props) {
 					uid: 'main',
 					...hgViewConfig,
 					initialXDomain,
+					initialYDomain: initialXDomain,
+					"autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+					"genomePositionSearchBox": {
+						"autocompleteServer": "//higlass.io/api/v1",
+						"autocompleteId": "P0PLbQMwTYGy-5uPIQid7A",
+						"chromInfoServer": "https://higlass.io/api/v1",
+						"chromInfoId": assembly,
+						"visible": true
+					},
+					"chromInfoPath": `//s3.amazonaws.com/pkerp/data/${assembly}/chromSizes.tsv`,
 				},
 			],
 			zoomLocks: {
@@ -322,7 +332,7 @@ function WidgetNavigation(props) {
 				locksDict: {},
 			},
 		};
-	}, [hgViewConfig]);
+	}, [hgViewConfig, assembly]);
 
 	return (
 		<div>
