@@ -308,10 +308,10 @@ function WidgetNavigation(props) {
 					...hgViewConfig,
 					initialXDomain,
 					initialYDomain: initialXDomain,
-					"autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+					"autocompleteSource": `/api/v1/suggest/?d=${REFERENCE_TILESETS[assembly].genes}&`,
 					"genomePositionSearchBox": {
 						"autocompleteServer": "//higlass.io/api/v1",
-						"autocompleteId": "P0PLbQMwTYGy-5uPIQid7A",
+						"autocompleteId": REFERENCE_TILESETS[assembly].genes,
 						"chromInfoServer": "https://higlass.io/api/v1",
 						"chromInfoId": assembly,
 						"visible": true
