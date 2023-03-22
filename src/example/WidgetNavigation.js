@@ -102,6 +102,9 @@ const useStyles = makeStyles((theme) => ({
 	chip: {
 		margin: 2,
 	},
+	higlassContainer: {
+		height: '700px',
+	},
 }));
 
 
@@ -118,10 +121,26 @@ const PALETTE = [
   [170, 68, 153],
 ];
 
+// https://vitessce-protected.s3.amazonaws.com/y2023-eadon-lab/H3K27Ac.20.Rep1_Rep2_Rep3.KTRC.A_B_D.merge.norm.bw
+
+const baseUrl = 'https://vitessce-protected.s3.amazonaws.com/y2023-eadon-lab';
+
 const technologyToBigWigUrl = {
-	'Bisulfite-seq': "https://s3.amazonaws.com/gosling-lang.org/data/Astrocytes-insertions_bin100_RIPnorm.bw",
-	'MNase-seq': "https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw",
-	'DNase-seq': "https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw",
+	'Methylation levels (WGBS): mlGLOM': `${baseUrl}/mlGLOM.bw`,
+	'Methylation levels (WGBS): mlTI': `${baseUrl}/mlTI.bw`,
+	'Histone Marks (CUT&RUN): H3K27Ac': `${baseUrl}/H3K27Ac.20.Rep1_Rep2_Rep3.KTRC.A_B_D.merge.norm.bw`,
+	'Histone Marks (CUT&RUN): H3K27me3': `${baseUrl}/H3K27me3.20.Rep1_Rep2_Rep3.687_688_LN2_OCT.KTRC.A_B_D.merge.norm.bw`,
+	'Histone Marks (CUT&RUN): H3K4me1': `${baseUrl}/H3K4me1.20.Rep1_2_3.merge.norm.bw`,
+	'Histone Marks (CUT&RUN): H3K4me3': `${baseUrl}/H3K4me3.20.Rep1_2_3.merge.norm.bw`,
+};
+
+const technologyToColor = {
+	'Methylation levels (WGBS): mlGLOM': [0x11, 0x38, 0x91],
+	'Methylation levels (WGBS): mlTI': [0xbb, 0x00, 0x1e],
+	'Histone Marks (CUT&RUN): H3K27Ac': [0x00, 0x69, 0x50],
+	'Histone Marks (CUT&RUN): H3K27me3': [0x80, 0x17, 0x37],
+	'Histone Marks (CUT&RUN): H3K4me1': [0x00, 0xa6, 0xdd],
+	'Histone Marks (CUT&RUN): H3K4me3': [0x00, 0xb1, 0x2a],
 };
 
 const ALL_TECHNOLOGIES = Object.keys(technologyToBigWigUrl); 
@@ -135,11 +154,19 @@ const cellTypeToBigWigUrl = {
 const ALL_CELLTYPES = Object.keys(cellTypeToBigWigUrl);
 
 const hgOptions = {
-	bounded: false,
-	pixelPreciseMarginPadding: true,
+	sizeMode: "bounded", // Stretch the height of HiGlass to its container <div/>
+	pixelPreciseMarginPadding: false,
+	bounded: true,
 	containerPaddingX: 0,
 	containerPaddingY: 0,
-	sizeMode: 'default',
+	viewMarginTop: 0,
+	viewMarginBottom: 0,
+	viewMarginLeft: 0,
+	viewMarginRight: 0,
+	viewPaddingTop: 0,
+	viewPaddingBottom: 0,
+	viewPaddingLeft: 0,
+	viewPaddingRight: 0,
 };
 
 const initialXDomain = [
@@ -168,7 +195,7 @@ function WidgetNavigation(props) {
 
 		// Set up the colors to use in the HiGlass view config based on the current theme.
 		const foregroundColor = (theme === 'dark' ? '#C0C0C0' : '#000000');
-		const backgroundColor = (theme === 'dark' ? '#000000' : '#f1f1f1');
+		const backgroundColor = (theme === 'dark' ? '#000000' : '#fff');
 
 		// Define the "reference tracks" for chromosome labels and gene annotations.
 		const referenceTracks = [
@@ -220,6 +247,8 @@ function WidgetNavigation(props) {
 			// Get the uid for the HiGlass track.
       const trackUid = technology;
       // Create the HiGlass track definition for this profile.
+
+			const color = technologyToColor[technology];
       const track = {
         type: 'horizontal-bar',
         uid: `bar-track-${trackUid}`,
@@ -235,7 +264,7 @@ function WidgetNavigation(props) {
           labelColor: (theme === 'dark' ? 'white' : 'black'),
           labelBackgroundColor: (theme === 'dark' ? 'black' : 'white'),
           labelShowAssembly: false,
-					barFillColor: "gray",
+					barFillColor: `rgb(${color[0]},${color[1]},${color[2]})`,
         },
         height: profileTrackHeight,
       };
@@ -335,7 +364,7 @@ function WidgetNavigation(props) {
 	}, [hgViewConfig, assembly]);
 
 	return (
-		<div>
+		<div className={classes.higlassContainer}>
 			<Grid
 				container
 				direction="row"
