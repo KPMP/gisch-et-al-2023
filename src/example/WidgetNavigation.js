@@ -2,7 +2,7 @@
 import React, { Suspense, useRef, useState, useMemo, useCallback, useEffect } from 'react';
 
 import register from 'higlass-register';
-import BigwigDataFetcher from 'higlass-bigwig-datafetcher/es/BigwigDataFetcher';
+import { BigwigDataFetcher } from 'higlass-bigwig-datafetcher';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
