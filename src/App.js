@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   StylesProvider,
   createGenerateClassName,
-} from '@material-ui/core/styles';
+} from '@material-ui/core';
 import WidgetNavigation from './example/WidgetNavigation';
 
 const generateClassName = createGenerateClassName({

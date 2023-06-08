@@ -1,7 +1,7 @@
 {
-  "name": "higlass-react-example",
+  "name": "gisch-et-al-2023",
   "version": "0.1.0",
-  "homepage": "https://keller-mark.github.io/higlass-kpmp-example/",
+  "homepage": "https://keller-mark.github.io//gisch-et-al-2023/",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.4",
