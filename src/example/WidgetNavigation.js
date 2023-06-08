@@ -371,7 +371,7 @@ function WidgetNavigation(props) {
 				justifyContent="start"
 			>
 				<Grid item xs={6} style={{ padding: '4px'}}>
-					<p>This is a demo of data from publication X which uses multiple experimental technologies to reveal Y. <br/><br/>Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
+					<p>The chromatin landscape of healthy and injured cell types in the human kidney<br/><br/>Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
 				</Grid>
 				<Grid item xs={6}>
 					<FormControl className={classes.formControl}>
