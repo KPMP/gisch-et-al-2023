@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 
+
 register(
   { dataFetcher: BigwigDataFetcher, config: BigwigDataFetcher.config },
   { pluginType: "dataFetcher" }
@@ -93,7 +94,13 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
 		minWidth: 200,
-		maxWidth: 300,
+		maxWidth: 'none',
+	},
+	buttonContainer: {
+		display: 'inline-block'
+	},
+	button: {
+		margin: theme.spacing(1)
 	},
 	chips: {
 		display: 'flex',
@@ -101,9 +108,20 @@ const useStyles = makeStyles((theme) => ({
 	},
 	chip: {
 		margin: 2,
+		height: 'auto',
+	},
+	container: {
+		display: 'flex',
+		flexDirection: 'column',
+		height: 'calc(100%)'
+	},
+	gridContainer: {
+		flexGrow: 0,
 	},
 	higlassContainer: {
-		height: '700px',
+		flexGrow: 1,
+		flexBasis: 1,
+		height: 'calc(100%)'
 	},
 }));
 
@@ -126,24 +144,40 @@ const PALETTE = [
 const baseUrl = 'https://vitessce-protected.s3.amazonaws.com/y2023-eadon-lab';
 
 const technologyToBigWigUrl = {
-	'Methylation levels (WGBS): mlGLOM': `${baseUrl}/mlGLOM.bw`,
-	'Methylation levels (WGBS): mlTI': `${baseUrl}/mlTI.bw`,
-	'Histone Marks (CUT&RUN): H3K27Ac': `${baseUrl}/H3K27Ac.20.Rep1_Rep2_Rep3.KTRC.A_B_D.merge.norm.bw`,
-	'Histone Marks (CUT&RUN): H3K27me3': `${baseUrl}/H3K27me3.20.Rep1_Rep2_Rep3.687_688_LN2_OCT.KTRC.A_B_D.merge.norm.bw`,
-	'Histone Marks (CUT&RUN): H3K4me1': `${baseUrl}/H3K4me1.20.Rep1_2_3.merge.norm.bw`,
-	'Histone Marks (CUT&RUN): H3K4me3': `${baseUrl}/H3K4me3.20.Rep1_2_3.merge.norm.bw`,
+	'Methylation levels (WGBS): microdissected glomeruli (GLOM)': `${baseUrl}/mlGLOM.bw`,
+	'Methylation levels (WGBS): microdissected tubulointerstitium (TI)': `${baseUrl}/mlTI.bw`,
+	'Histone modifications (CUT&RUN): H3K27Ac (active chromatin)': `${baseUrl}/H3K27Ac.20.Rep1_Rep2_Rep3.KTRC.A_B_D.merge.norm.bw`,
+	'Histone modifications (CUT&RUN): H3K4me1 (active chromatin)': `${baseUrl}/H3K4me1.20.Rep1_2_3.merge.norm.bw`,
+	'Histone modifications (CUT&RUN): H3K4me3 (active chromatin)': `${baseUrl}/H3K4me3.20.Rep1_2_3.merge.norm.bw`,
+	'Histone modifications (CUT&RUN): H3K27me3 (repressive chromatin)': `${baseUrl}/H3K27me3.20.Rep1_Rep2_Rep3.687_688_LN2_OCT.KTRC.A_B_D.merge.norm.bw`,
 };
 
 const technologyToColor = {
-	'Methylation levels (WGBS): mlGLOM': [0x11, 0x38, 0x91],
-	'Methylation levels (WGBS): mlTI': [0xbb, 0x00, 0x1e],
-	'Histone Marks (CUT&RUN): H3K27Ac': [0x00, 0x69, 0x50],
-	'Histone Marks (CUT&RUN): H3K27me3': [0x80, 0x17, 0x37],
-	'Histone Marks (CUT&RUN): H3K4me1': [0x00, 0xa6, 0xdd],
-	'Histone Marks (CUT&RUN): H3K4me3': [0x00, 0xb1, 0x2a],
+	'Methylation levels (WGBS): microdissected glomeruli (GLOM)': [0x11, 0x38, 0x91],
+	'Methylation levels (WGBS): microdissected tubulointerstitium (TI)': [0xbb, 0x00, 0x1e],
+	'Histone modifications (CUT&RUN): H3K27Ac (active chromatin)': [0x00, 0x69, 0x50],
+	'Histone modifications (CUT&RUN): H3K4me1 (active chromatin)': [0x00, 0xa6, 0xdd],
+	'Histone modifications (CUT&RUN): H3K4me3 (active chromatin)': [0x00, 0xb1, 0x2a],
+	'Histone modifications (CUT&RUN): H3K27me3 (repressive chromatin)': [0x80, 0x17, 0x37],
 };
 
 const ALL_TECHNOLOGIES = Object.keys(technologyToBigWigUrl); 
+
+// PT = proximal tubule
+// TAL = thick ascending limb
+// POD = podocyte
+// C-TAL = cortical TAL
+
+const cellTypeClassToBigWigUrl = {
+	'aPT': `${baseUrl}/Multiome_paper/aPT.bw`,
+	'aTAL12': `${baseUrl}/Multiome_paper/aTAL12.bw`,
+	'C-TAL': `${baseUrl}/Multiome_paper/C-TAL.bw`,
+	'POD': `${baseUrl}/Multiome_paper/POD.bw`,
+	'PT-S1': `${baseUrl}/Multiome_paper/PT-S1.bw`,
+	'PT-S12': `${baseUrl}/Multiome_paper/PT-S12.bw`,
+	'PT-S2': `${baseUrl}/Multiome_paper/PT-S2.bw`,
+	'PT-S3': `${baseUrl}/Multiome_paper/PT-S3.bw`,
+};
 
 const cellTypeSubclassToBigWigUrl = {
 	'ATL (subclass)': `${baseUrl}/Multiome_subclassl1/ATL_subclass.l1.bw`,
@@ -165,20 +199,16 @@ const cellTypeSubclassToBigWigUrl = {
 };
 
 const cellTypeToBigWigUrl = {
-	'aPT': `${baseUrl}/Multiome_paper/aPT.bw`,
-	'aTAL12': `${baseUrl}/Multiome_paper/aTAL12.bw`,
-	'C-TAL': `${baseUrl}/Multiome_paper/C-TAL.bw`,
-	'POD': `${baseUrl}/Multiome_paper/POD.bw`,
-	'PT-S1': `${baseUrl}/Multiome_paper/PT-S1.bw`,
-	'PT-S12': `${baseUrl}/Multiome_paper/PT-S12.bw`,
-	'PT-S2': `${baseUrl}/Multiome_paper/PT-S2.bw`,
-	'PT-S3': `${baseUrl}/Multiome_paper/PT-S3.bw`,
+	...cellTypeClassToBigWigUrl,
 	...cellTypeSubclassToBigWigUrl,
 };
 
 
 
 const ALL_CELLTYPES = Object.keys(cellTypeToBigWigUrl);
+const ALL_COARSE = Object.keys(cellTypeClassToBigWigUrl);
+const ALL_FINE = Object.keys(cellTypeSubclassToBigWigUrl);
+
 
 const hgOptions = {
 	sizeMode: "bounded", // Stretch the height of HiGlass to its container <div/>
@@ -200,6 +230,22 @@ const initialXDomain = [
 	0,
 	300000000
 ];
+
+// Map from a lock name (arbitrary) to a list of tracks (assumed to be in the "main" view).
+const lockGroups = {
+	"methylation": [
+		"bar-track-Methylation levels (WGBS): microdissected glomeruli (GLOM)",
+		"bar-track-Methylation levels (WGBS): microdissected tubulointerstitium (TI)"
+	],
+	"active-chromatin": [
+		'Histone modifications (CUT&RUN): H3K27Ac (active chromatin)',
+		'Histone modifications (CUT&RUN): H3K4me1 (active chromatin)',
+		'Histone modifications (CUT&RUN): H3K4me3 (active chromatin)',
+	],
+	// only one track for repressive chromatin, so no need for lock.
+	"coarse": Object.keys(ALL_COARSE),
+	"fine": Object.keys(ALL_FINE),
+}
 
 function WidgetNavigation(props) {
 	const {
@@ -351,6 +397,25 @@ function WidgetNavigation(props) {
 	}, [selectedCellTypes, theme, assembly]);
 
 	const hgFullConfig = useMemo(() => {
+		// Construct locks for value scales.
+		const locksByViewUid = {};
+		Object.entries(lockGroups).forEach(([lockName, trackUids]) => {
+			trackUids.forEach(trackUid => {
+				locksByViewUid[`main.${trackUid}`] = lockName;
+			});
+		});
+		const locksDict = {};
+		Object.entries(lockGroups).forEach(([lockName, trackUids]) => {
+			locksDict[lockName] = { uid: lockName };
+			trackUids.forEach(trackUid => {
+				locksDict[lockName][`main.${trackUid}`] = {
+					view: "main",
+					track: trackUid,
+				};
+			});
+		});
+
+		// Return view config.
 		return {
 			editable: true,
 			zoomFixed: false,
@@ -383,58 +448,82 @@ function WidgetNavigation(props) {
 				locksByViewUid: {},
 				locksDict: {},
 			},
+			// Reference: https://github.com/higlass/higlass/blob/b2ee5940c519982dc53685153ff863d64443d0bb/docs/examples/viewconfs/lots-of-locks.json#L158
 			valueScaleLocks: {
-				locksByViewUid: {},
-				locksDict: {},
+				locksByViewUid,
+				locksDict,
 			},
 		};
 	}, [hgViewConfig, assembly]);
 
+	
+
+	function onAllCoarse() {
+		setSelectedCellTypes(ALL_COARSE);
+	}
+	function onAllFine() {
+		setSelectedCellTypes(ALL_FINE);
+	}
+	function onClearAll() {
+		setSelectedCellTypes([]);
+	}
+
 	return (
-		<div className={classes.higlassContainer}>
-			<Grid
-				container
-				direction="row"
-				justifyContent="start"
-			>
-				<Grid item xs={6} style={{ padding: '4px'}}>
-					<p>The chromatin landscape of healthy and injured cell types in the human kidney<br/><br/>Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
+		<div className={classes.container}>
+			<div className={classes.gridContainer}>
+				<Grid
+					container
+					direction="row"
+					justifyContent="start"
+				>
+					<Grid item xs={6} style={{ padding: '4px'}}>
+						<p>The chromatin landscape of healthy and injured cell types in the human kidney<br/><br/>Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
+					</Grid>
+					<Grid item xs={4}>
+						<FormControl className={classes.formControl}>
+							<InputLabel id="demo-mutiple-chip-label">Cell Types</InputLabel>
+							<Select
+								labelId="demo-mutiple-chip-label"
+								id="demo-mutiple-chip"
+								multiple
+								value={selectedCellTypes}
+								onChange={handleChange}
+								input={<Input id="select-multiple-chip" />}
+								renderValue={(selected) => (
+									<div className={classes.chips}>
+										{selected.map((value) => (
+											<Chip key={value} label={value} className={classes.chip} />
+										))}
+									</div>
+								)}
+								MenuProps={MenuProps}
+							>
+								{ALL_CELLTYPES.map((name) => (
+									<MenuItem key={name} value={name} style={{ fontWeight: 'normal' }}>
+										{name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={2}>
+						<FormControl className={classes.buttonContainer}>
+							<Button size="small" variant="outlined" className={classes.button} onClick={onAllCoarse}>All classes</Button>
+							<Button size="small" variant="outlined" className={classes.button} onClick={onAllFine}>All subclasses</Button>
+							<Button size="small" variant="outlined" className={classes.button} onClick={onClearAll}>Clear all</Button>
+						</FormControl>
+					</Grid>
 				</Grid>
-				<Grid item xs={6}>
-					<FormControl className={classes.formControl}>
-						<InputLabel id="demo-mutiple-chip-label">Cell Types</InputLabel>
-						<Select
-							labelId="demo-mutiple-chip-label"
-							id="demo-mutiple-chip"
-							multiple
-							value={selectedCellTypes}
-							onChange={handleChange}
-							input={<Input id="select-multiple-chip" />}
-							renderValue={(selected) => (
-								<div className={classes.chips}>
-									{selected.map((value) => (
-										<Chip key={value} label={value} className={classes.chip} />
-									))}
-								</div>
-							)}
-							MenuProps={MenuProps}
-						>
-							{ALL_CELLTYPES.map((name) => (
-								<MenuItem key={name} value={name} style={{ fontWeight: 'normal' }}>
-									{name}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<Suspense fallback={<div>Loading...</div>}>
-				<LazyHiGlassComponent
-					zoomFixed={false}
-					viewConfig={hgFullConfig}
-					options={hgOptions}
-				/>
-			</Suspense>
+			</div>
+			<div className={classes.higlassContainer}>
+				<Suspense fallback={<div>Loading...</div>}>
+					<LazyHiGlassComponent
+						zoomFixed={false}
+						viewConfig={hgFullConfig}
+						options={hgOptions}
+					/>
+				</Suspense>
+			</div>
 		</div>
 	);
 }
