@@ -1,5 +1,5 @@
 {
-  "name": "higlass-react-template",
+  "name": "higlass-react-example",
   "version": "0.1.0",
   "homepage": "https://keller-mark.github.io/higlass-kpmp-example/",
   "private": true,
@@ -14,7 +14,7 @@
     "eslint-plugin-react": "^7.30.1",
     "higlass": "1.12.2",
     "higlass-register": "^0.3.0",
-    "higlass-bigwig-datafetcher": "^0.1.2",
+    "higlass-bigwig-datafetcher": "0.2.0",
     "pixi.js": "6.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
