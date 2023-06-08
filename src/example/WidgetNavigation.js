@@ -145,11 +145,38 @@ const technologyToColor = {
 
 const ALL_TECHNOLOGIES = Object.keys(technologyToBigWigUrl); 
 
-const cellTypeToBigWigUrl = {
-	'Astrocyte': "https://s3.amazonaws.com/gosling-lang.org/data/Astrocytes-insertions_bin100_RIPnorm.bw",
-	'Excitatory Neurons': "https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw",
-	'Inhibitory Neurons': "https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw",
+const cellTypeSubclassToBigWigUrl = {
+	'ATL (subclass)': `${baseUrl}/Multiome_subclassl1/ATL_subclass.l1.bw`,
+	'CNT (subclass)': `${baseUrl}/Multiome_subclassl1/CNT_subclass.l1.bw`,
+	'DCT (subclass)': `${baseUrl}/Multiome_subclassl1/DCT_subclass.l1.bw`,
+	'DTL (subclass)': `${baseUrl}/Multiome_subclassl1/DTL_subclass.l1.bw`,
+	'EC (subclass)': `${baseUrl}/Multiome_subclassl1/EC_subclass.l1.bw`,
+	'FIB (subclass)': `${baseUrl}/Multiome_subclassl1/FIB_subclass.l1.bw`,
+	'IC (subclass)': `${baseUrl}/Multiome_subclassl1/IC_subclass.l1.bw`,
+	'IMM (subclass)': `${baseUrl}/Multiome_subclassl1/IMM_subclass.l1.bw`,
+	'NEU (subclass)': `${baseUrl}/Multiome_subclassl1/NEU_subclass.l1.bw`,
+	'PapE (subclass)': `${baseUrl}/Multiome_subclassl1/PapE_subclass.l1.bw`,
+	'PC (subclass)': `${baseUrl}/Multiome_subclassl1/PC_subclass.l1.bw`,
+	'PEC (subclass)': `${baseUrl}/Multiome_subclassl1/PEC_subclass.l1.bw`,
+	'POD (subclass)': `${baseUrl}/Multiome_subclassl1/POD_subclass.l1.bw`,
+	'PT (subclass)': `${baseUrl}/Multiome_subclassl1/PT_subclass.l1.bw`,
+	'TAL (subclass)': `${baseUrl}/Multiome_subclassl1/TAL_subclass.l1.bw`,
+	'VSM-P (subclass)': `${baseUrl}/Multiome_subclassl1/VSM-P_subclass.l1.bw`,
 };
+
+const cellTypeToBigWigUrl = {
+	'aPT': `${baseUrl}/Multiome_paper/aPT.bw`,
+	'aTAL12': `${baseUrl}/Multiome_paper/aTAL12.bw`,
+	'C-TAL': `${baseUrl}/Multiome_paper/C-TAL.bw`,
+	'POD': `${baseUrl}/Multiome_paper/POD.bw`,
+	'PT-S1': `${baseUrl}/Multiome_paper/PT-S1.bw`,
+	'PT-S12': `${baseUrl}/Multiome_paper/PT-S12.bw`,
+	'PT-S2': `${baseUrl}/Multiome_paper/PT-S2.bw`,
+	'PT-S3': `${baseUrl}/Multiome_paper/PT-S3.bw`,
+	...cellTypeSubclassToBigWigUrl,
+};
+
+
 
 const ALL_CELLTYPES = Object.keys(cellTypeToBigWigUrl);
 
