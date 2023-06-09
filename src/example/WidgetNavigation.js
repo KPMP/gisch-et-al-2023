@@ -203,7 +203,7 @@ const cellTypeToBigWigUrl = {
 };
 
 
-
+const ALL_REFERENCE_TRACKS = Object.keys(technologyToBigWigUrl);
 const ALL_CELLTYPES = Object.keys(cellTypeToBigWigUrl);
 const ALL_COARSE = Object.keys(cellTypeClassToBigWigUrl);
 const ALL_FINE = Object.keys(cellTypeSubclassToBigWigUrl);
@@ -233,18 +233,19 @@ const initialXDomain = [
 // Map from a lock name (arbitrary) to a list of tracks (assumed to be in the "main" view).
 const lockGroups = {
 	"methylation": [
-		"bar-track-Methylation levels (WGBS): microdissected glomeruli (GLOM)",
-		"bar-track-Methylation levels (WGBS): microdissected tubulointerstitium (TI)"
+		"Methylation levels (WGBS): microdissected glomeruli (GLOM)",
+		"Methylation levels (WGBS): microdissected tubulointerstitium (TI)"
 	],
-	"active-chromatin": [
+	/*"active-chromatin": [
 		'Histone modifications (CUT&RUN): H3K27Ac (active chromatin)',
 		'Histone modifications (CUT&RUN): H3K4me1 (active chromatin)',
 		'Histone modifications (CUT&RUN): H3K4me3 (active chromatin)',
-	],
+	],*/
 	// only one track for repressive chromatin, so no need for lock.
-	"coarse": Object.keys(ALL_COARSE),
-	"fine": Object.keys(ALL_FINE),
-}
+	"coarse": ALL_COARSE,
+	"fine": ALL_FINE,
+};
+console.log(lockGroups);
 
 function WidgetNavigation(props) {
 	const {
@@ -323,7 +324,7 @@ function WidgetNavigation(props) {
 			const color = technologyToColor[technology];
       const track = {
         type: 'horizontal-bar',
-        uid: `bar-track-${trackUid}`,
+        uid: trackUid,
         data: {
           type: 'bbi',
           url: technologyToBigWigUrl[technology],
@@ -350,7 +351,7 @@ function WidgetNavigation(props) {
       // Create the HiGlass track definition for this profile.
       const track = {
         type: 'horizontal-bar',
-        uid: `bar-track-${trackUid}`,
+        uid: trackUid,
         data: {
           type: 'bbi',
           url: cellTypeToBigWigUrl[cellType],
@@ -397,20 +398,25 @@ function WidgetNavigation(props) {
 
 	const hgFullConfig = useMemo(() => {
 		// Construct locks for value scales.
+		const visibleTrackUids = [...ALL_REFERENCE_TRACKS, ...selectedCellTypes];
 		const locksByViewUid = {};
 		Object.entries(lockGroups).forEach(([lockName, trackUids]) => {
 			trackUids.forEach(trackUid => {
-				locksByViewUid[`main.${trackUid}`] = lockName;
+				if(visibleTrackUids.includes(trackUid)) {
+					locksByViewUid[`main.${trackUid}`] = lockName;
+				}
 			});
 		});
 		const locksDict = {};
 		Object.entries(lockGroups).forEach(([lockName, trackUids]) => {
 			locksDict[lockName] = { uid: lockName };
 			trackUids.forEach(trackUid => {
-				locksDict[lockName][`main.${trackUid}`] = {
-					view: "main",
-					track: trackUid,
-				};
+				if(visibleTrackUids.includes(trackUid)) {
+					locksDict[lockName][`main.${trackUid}`] = {
+						view: "main",
+						track: trackUid,
+					};
+				}
 			});
 		});
 
@@ -500,12 +506,17 @@ function WidgetNavigation(props) {
 										
 										Gisch, D. L., Brennan M., Lake B. B., Basta J. et al. "The chromatin landscape of healthy and injured cell types in the human kidney." <b>bioRxiv</b> (2023).
 
-										<Typography variant="h5">Acronyms</Typography>
+										<Typography variant="h5">Cell type acronyms</Typography>
+										TAL: thick ascending limb<br/>
+										aTAL: adaptive TAL<br/>
+										C-TAL: cortical TAL<br/>
+										POD: podocyte<br/>
 										PT: proximal tubule<br/>
 										aPT: adaptive PT<br/>
-										TAL: thick ascending limb<br/>
-										POD: podocyte<br/>
-										C-TAL: cortical TAL<br/>
+										PT-S1: PT segment 1<br/>
+										PT-S2: PT segment 2<br/>
+										PT-S3: PT segment 3<br/>
+										PT-S12: PT-S1 merged with PT-S2<br/>
 									</DialogContentText>
 								</DialogContent>
 								<DialogActions>
@@ -549,7 +560,7 @@ function WidgetNavigation(props) {
 						<FormControl className={classes.buttonContainer}>
 							<Button size="small" variant="outlined" className={classes.button} onClick={onAllCoarse}>All classes</Button>
 							<Button size="small" variant="outlined" className={classes.button} onClick={onAllFine}>All subclasses</Button>
-							<Button size="small" variant="outlined" className={classes.button} onClick={onClearAll}>Clear all</Button>
+							<Button size="small" variant="outlined" className={classes.button} onClick={onClearAll}>Clear cell type tracks</Button>
 						</FormControl>
 					</Grid>
 				</Grid>
