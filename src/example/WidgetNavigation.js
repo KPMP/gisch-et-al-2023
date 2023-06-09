@@ -19,7 +19,11 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 register(
   { dataFetcher: BigwigDataFetcher, config: BigwigDataFetcher.config },
@@ -162,11 +166,6 @@ const technologyToColor = {
 };
 
 const ALL_TECHNOLOGIES = Object.keys(technologyToBigWigUrl); 
-
-// PT = proximal tubule
-// TAL = thick ascending limb
-// POD = podocyte
-// C-TAL = cortical TAL
 
 const cellTypeClassToBigWigUrl = {
 	'aPT': `${baseUrl}/Multiome_paper/aPT.bw`,
@@ -456,7 +455,7 @@ function WidgetNavigation(props) {
 		};
 	}, [hgViewConfig, assembly]);
 
-	
+	const [acronymsOpen, setAcronymsOpen] = useState(false);
 
 	function onAllCoarse() {
 		setSelectedCellTypes(ALL_COARSE);
@@ -466,6 +465,12 @@ function WidgetNavigation(props) {
 	}
 	function onClearAll() {
 		setSelectedCellTypes([]);
+	}
+	function onOpenAcronyms() {
+		setAcronymsOpen(true);
+	}
+	function onCloseAcronyms() {
+		setAcronymsOpen(false);
 	}
 
 	return (
@@ -477,7 +482,41 @@ function WidgetNavigation(props) {
 					justifyContent="start"
 				>
 					<Grid item xs={6} style={{ padding: '4px'}}>
-						<p>The chromatin landscape of healthy and injured cell types in the human kidney<br/><br/>Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
+						<p>The chromatin landscape of healthy and injured cell types in the human kidney&nbsp;
+						<div style={{ display: 'inline'}}>
+							{/* Acronym dialog */}
+							<Button size="small" variant="outlined" onClick={onOpenAcronyms}>
+								About
+							</Button>
+							<Dialog
+								open={acronymsOpen}
+								onClose={onCloseAcronyms}
+								aria-labelledby="alert-dialog-title"
+								aria-describedby="alert-dialog-description"
+							>
+								<DialogContent>
+									<DialogContentText id="alert-dialog-description">
+										<Typography variant="h5">Publication</Typography>
+										
+										Gisch, D. L., Brennan M., Lake B. B., Basta J. et al. "The chromatin landscape of healthy and injured cell types in the human kidney." <b>bioRxiv</b> (2023).
+
+										<Typography variant="h5">Acronyms</Typography>
+										PT: proximal tubule<br/>
+										aPT: adaptive PT<br/>
+										TAL: thick ascending limb<br/>
+										POD: podocyte<br/>
+										C-TAL: cortical TAL<br/>
+									</DialogContentText>
+								</DialogContent>
+								<DialogActions>
+								<Button onClick={onCloseAcronyms} color="primary" autoFocus>
+									Close
+								</Button>
+								</DialogActions>
+							</Dialog>
+						</div>	
+						<br/><br/>
+						Select cell types from the list to the right to visualize corresponding aggregate scATAC-seq tracks.</p>
 					</Grid>
 					<Grid item xs={4}>
 						<FormControl className={classes.formControl}>
