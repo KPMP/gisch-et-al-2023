@@ -145,7 +145,7 @@ const PALETTE = [
 
 // https://vitessce-protected.s3.amazonaws.com/y2023-eadon-lab/H3K27Ac.20.Rep1_Rep2_Rep3.KTRC.A_B_D.merge.norm.bw
 
-const baseUrl = 'https://vitessce-protected.s3.amazonaws.com/y2023-eadon-lab';
+const baseUrl = 'https://data-2.vitessce.io/kpmp-gisch-et-al-2023/y2023-eadon-lab';
 
 const technologyToBigWigUrl = {
 	'Methylation levels (WGBS): microdissected glomeruli (GLOM)': `${baseUrl}/mlGLOM.bw`,
